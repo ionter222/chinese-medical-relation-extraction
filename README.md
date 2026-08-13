@@ -30,11 +30,11 @@ Python 3.12 / transformers 4.5x+ / 新 torch 环境下,**存在多处兼容性�
 
 | # | 问题 | 根因 | 修复方案 |
 |---|------|------|---------|
-| 1 | `ImportError: cannot import name 'AdamW' from 'transformers'` | transformers 在 4.x 后期将 `AdamW` 移出顶层导出 | 改为 `from torch.optim import AdamW`(与 transformers 版本无关) |
-| 2 | `BertTokenizer.from_pretrained('.../vocab.txt')` 报错 | 新 transformers 要求传**目录**而非单个文件 | 改为传 `model_hub/chinese-bert-wwm-ext` 目录 |
-| 3 | 首次训练报 `checkpoints/bert/model.pt 不存在` | main.py 默认执行 `test()` 加载历史模型,而 train() 被注释 | 启用 `bertForNer.train()`,跳过首次无模型时的 `test()` |
-| 4 | `ModuleNotFoundError: No module named 'tensorboardX'` | 环境缺依赖 | 安装 `tensorboardX` |
-| 5 | **CMeIE 数据 subject 丢失 → F1=0** | CMeIE 的 text 是 `主题疾病@正文` 格式,subject 来自 `@` 前缀;粗暴切分会把 subject 丢掉,data_loader 在文本中找不到实体,标签全空 | **保留完整 text 不切分**,确保 subject 命中率 100% |
+| 1 | ImportError: cannot import name AdamW from transformers | transformers 在 4.x 后期将 AdamW 移出顶层导出 | 改为 from torch.optim import AdamW(与 transformers 版本无关) |
+| 2 | BertTokenizer.from_pretrained 传 vocab.txt 报错 | 新 transformers 要求传目录而非单个文件 | 改为传 model_hub 目录 |
+| 3 | 首次训练报 checkpoints/bert/model.pt 不存在 | main.py 默认执行 test() 加载历史模型,而 train() 被注释 | 启用 bertForNer.train(),跳过首次无模型时的 test() |
+| 4 | ModuleNotFoundError: No module named tensorboardX | 环境缺依赖 | 安装 tensorboardX |
+| 5 | CMeIE 数据 subject 丢失导致 F1=0 | CMeIE 的 text 是「主题疾病@正文」格式,subject 来自 @ 前缀;粗暴切分会把 subject 丢掉,data_loader 在文本中找不到实体,标签全空 | 保留完整 text 不切分,确保 subject 命中率 100% |
 
 ### 2.2 提供的现代化解决方案
 
